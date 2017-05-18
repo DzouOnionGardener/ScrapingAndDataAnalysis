@@ -1,4 +1,4 @@
-# ScrapingAndDataAnalysis
+# Scraping And Data Analysis
 
 ### start here
 read up on xpath, its has a bit has an approach to child element access similar to that of CSS, for a lack of better works. Its relatively short and should be easy to understand given some experience and/or knowledge of SQL
