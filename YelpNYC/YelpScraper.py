@@ -1,8 +1,18 @@
 import scrapy
 import requests
 from bs4 import BeautifulSoup
+import csv
 
 url = "https://www.yelp.com/search?cflt=restaurants&find_loc=New+York%2C+NY%2C+US"
+"""
+we're going to use parse data from the first 20 pages
+store that data into CSV files
+then we'll also store that data into a mySQL database
+execute some basic queries on it
+===
+we'll then learn how to use pandas and matplotlib to graph that data
+"""
+
 req = requests.get(url)
 soup = BeautifulSoup(req.content)
 
@@ -16,7 +26,8 @@ soup = BeautifulSoup(req.content)
 bizName = soup.find_all("a", {"class":"biz-name"})
 bizRating = soup.find_all("div", {"class":"i-stars"})
 priceRange = soup.find_all("span",{"class":"price-range"})
-SecondaryAttr = soup.find_all("div", {"class:secondary-attribute"})
+SecondaryAttr = soup.find_all("div", {"class":"secondary-attribute"})
+bizNeighborhood = soup.find_all("span", {"class":"neighborhood-str-list"})
 bizAddr = soup.find_all("address")
 
 for names in bizName:
@@ -31,3 +42,5 @@ for price in priceRange:
 for addr in bizAddr:
     print addr.text
 
+for n in bizNeighborhood:
+    print n.text
