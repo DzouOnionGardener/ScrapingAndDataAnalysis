@@ -40,7 +40,7 @@ for price in priceRange:
     print price.text
 
 for addr in bizAddr:
-    print addr.text
+    print addr.text.lstrip()
 
 for n in bizNeighborhood:
-    print n.text
+    print n.text.lstrip()
