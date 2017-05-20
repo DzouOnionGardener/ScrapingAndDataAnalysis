@@ -11,3 +11,6 @@ next you'll want to watch this video for some brief introduction.
 after that, you'll need to download and install scrapy for python; [get it here](https://docs.scrapy.org/en/latest/). The next thing you'll need is Beautiful Soup, also for python, it's used to parse HTML tags and data; [get it here](https://www.crummy.com/software/BeautifulSoup/).
 
 when you have those things, we can begin to look into the documentation of scrapy, we'll devise a plan on how and what to do with the implement our scraper/spider.
+
+### read up on this before starting
+* https://blog.hartleybrody.com/web-scraping-cheat-sheet/
