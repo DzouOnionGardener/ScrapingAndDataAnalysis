@@ -12,6 +12,9 @@ after that, you'll need to download and install scrapy for python; [get it here]
 
 when you have those things, we can begin to look into the documentation of scrapy, we'll devise a plan on how and what to do with the implement our scraper/spider.
 
+### read up on this before starting
+* https://blog.hartleybrody.com/web-scraping-cheat-sheet/
+
 ==
 
 next you'll want to install the necessary components to access your MySQL server
@@ -19,3 +22,4 @@ next you'll want to install the necessary components to access your MySQL server
 * `pip install MySQL-python`
 * `pip install mysql-connector-python`
 * `pip install pymysql`
+=======
