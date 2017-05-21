@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import csv
 import time
 import MySQLdb
+import unicodedata
 """
 we're going to parse data from the first 100 pages
 store that data into CSV files
@@ -51,7 +52,7 @@ class Yelp(object):
     # <address>
     def generateCSV(self):
         page = 1
-        while(self.pageIndex < 30):
+        while(self.pageIndex < 20):
             print "reading page %s" % page
             url = self.baseURL + str(self.pageIndex) + self.endURL
             req = requests.get(url)
@@ -60,7 +61,7 @@ class Yelp(object):
 
             #bn = [d.span.contents[0] for d in soup.find_all("a", {"class":"biz-name"})]
 
-            bn = [d.span.contents for d in soup.find_all("a", {"class": "biz-name"})]
+            bn = [unicodedata.normalize('NFKD', d.span.contents[0]).encode('ASCII', 'ignore') for d in soup.find_all("a", {"class": "biz-name"})]
             rating = [d['title'].strip('star rating') for d in soup.find_all("div", {"class":"i-stars"})]
             price = [d.contents[0] for d in soup.find_all("span",{"class":"price-range"})]
             area = [d.contents[0].strip() for d in soup.find_all("span", {"class":"neighborhood-str-list"})]
