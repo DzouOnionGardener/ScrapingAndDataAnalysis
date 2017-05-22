@@ -22,4 +22,17 @@ next you'll want to install the necessary components to access your MySQL server
 * `pip install MySQL-python`
 * `pip install mysql-connector-python`
 * `pip install pymysql`
+
 =======
+
+## Okay now we need pandas and matplotlib
+
+pandas documentation is on the side it can be found  [here](http://pandas.pydata.org/pandas-docs/stable/)
+
+learn how utilize the graphs [here](http://pandas.pydata.org/pandas-docs/stable/visualization.html)
+
+here are some videos you can watch to learn about about pandas-- watch in order:
+1. https://www.youtube.com/watch?v=9d5-Ti6onew
+2. https://www.youtube.com/watch?v=POe1cufDWFs
+
+==

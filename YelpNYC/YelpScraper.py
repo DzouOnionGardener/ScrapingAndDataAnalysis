@@ -52,15 +52,13 @@ class Yelp(object):
     # <address>
     def generateCSV(self):
         page = 1
-        while(self.pageIndex < 20):
+        ## change the page index to increase/decrease the number of pages you want to parse
+        while(self.pageIndex < 30):
             print "reading page %s" % page
             url = self.baseURL + str(self.pageIndex) + self.endURL
             req = requests.get(url)
             soup = BeautifulSoup(req.content, "lxml")
             ##
-
-            #bn = [d.span.contents[0] for d in soup.find_all("a", {"class":"biz-name"})]
-
             bn = [unicodedata.normalize('NFKD', d.span.contents[0]).encode('ASCII', 'ignore') for d in soup.find_all("a", {"class": "biz-name"})]
             rating = [d['title'].strip('star rating') for d in soup.find_all("div", {"class":"i-stars"})]
             price = [d.contents[0] for d in soup.find_all("span",{"class":"price-range"})]
@@ -76,9 +74,14 @@ class Yelp(object):
                     pass
             self.pageIndex += 10
             page += 1
-            time.sleep(3)
+            time.sleep(2)
         print "done"
 
+    def printRestaurantList(self):
+        print self.res
+
+
+    #TODO: get importToDATABASE to work
     def ImportToDataBase(self):
         userName = raw_input("mySQL userName: ")
         password = raw_input("mySQL password: ")
@@ -93,15 +96,20 @@ class Yelp(object):
         cursor = DB.cursor()
         ##used to handle database side actions
         #query = "INSERT INTO restaurantTable(name, rating, price, area, addr) VALUES('%s', '%s', '%s', '%s', '%s' )"
-
-        #for elements in restaurants list
+        self.resCSV = csv.reader(file('results.csv'))
+        #for rows in results.csv
         try:
-            for e in self.res:
-                cursor.execute("INSERT INTO Restaurants.restaurantTable(name, rating, price, area, addr) VALUES(%s, %s, %s, %s, %s )", e)
-                print "executed!"
+            for rows in self.resCSV:
+                #print e
+                try:
+                    cursor.execute("INSERT INTO Restaurants.restaurantTable(name, rating, price, area, addr) VALUES(%s, %s, %s, %s, %s )", rows)
+                    print "executed!"
+                except:
+                    pass
         except:
             pass
         print "done! closing connection."
+        DB.commit() #commit insert
         cursor.close()
         DB.close()
 
@@ -127,5 +135,5 @@ class Yelp(object):
 if __name__ == "__main__":
     y = Yelp()
     y.generateCSV()
-    #y.ImportToDataBase()
+    y.ImportToDataBase()
     #y.printDB()
