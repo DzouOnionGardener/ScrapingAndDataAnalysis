@@ -53,7 +53,7 @@ class Yelp(object):
     def generateCSV(self):
         page = 1
         ## change the page index to increase/decrease the number of pages you want to parse
-        while(self.pageIndex < 30):
+        while(self.pageIndex < 300):
             print "reading page %s" % page
             url = self.baseURL + str(self.pageIndex) + self.endURL
             req = requests.get(url)
