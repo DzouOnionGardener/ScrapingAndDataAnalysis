@@ -40,6 +40,10 @@ class Yelp(object):
         self.pageIndex = 0
         self.endURL = "&cflt=restaurants"
         self.res = []
+        self.userName = raw_input("mySQL userName: ")
+        self.password = raw_input("mySQL password: ")
+        self.userName = str(self.userName)
+        self.password = str(self.password)
         with open('results.csv', 'w') as csvfile:
             self.writer = csv.writer(csvfile)
             self.writer.writerow(["Restaurant", "Rating", "Price_Range", "Area", "Address"])
@@ -83,13 +87,9 @@ class Yelp(object):
 
     #TODO: get importToDATABASE to work
     def ImportToDataBase(self):
-        userName = raw_input("mySQL userName: ")
-        password = raw_input("mySQL password: ")
-        userName = str(userName)
-        password = str(password)
         ##
         ## address, username, password, database_name
-        DB = MySQLdb.connect("localhost", userName, password, "Restaurants")
+        DB = MySQLdb.connect("localhost", self.userName, self.password, "Restaurants")
         #table = restaurantTable
         #columns: name(varchar(255)), rating(decimal), price(varchar(6)), area(varchar(255)), addr(varchar(255))
 
@@ -115,13 +115,9 @@ class Yelp(object):
 
 
     def printDB(self):
-        userName = raw_input("mySQL userName: ")
-        password = raw_input("mySQL password: ")
-        userName = str(userName)
-        password = str(password)
         ##
         ## address, username, password, database_name
-        DB = MySQLdb.connect("localhost", userName, password, "Restaurants")
+        DB = MySQLdb.connect("localhost", self.userName, self.password, "Restaurants")
         print "connected"
         cursor = DB.cursor()
         cursor.execute("select * from Restaurants.restaurantTable")
@@ -135,5 +131,5 @@ class Yelp(object):
 if __name__ == "__main__":
     y = Yelp()
     y.generateCSV()
-    y.ImportToDataBase()
+    #y.ImportToDataBase()
     #y.printDB()
