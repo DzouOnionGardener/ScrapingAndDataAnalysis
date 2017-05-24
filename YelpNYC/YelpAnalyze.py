@@ -1,6 +1,8 @@
+from __future__ import division
 import pandas as pd
 import matplotlib.pyplot as plt
 import MySQLdb
+
 
 class analyzer(object):
     def __init__(self):
@@ -11,6 +13,9 @@ class analyzer(object):
         DB = MySQLdb.connect("localhost", self.username, self.password, "Restaurants")
         ##retrieve Data from mySQL server then stores into resData
         self.resData = pd.read_sql('SELECT * FROM Restaurants.restaurantTable', con=DB)
+        #for index, a in self.resData.iterrows():
+        #    if a['price'] == '$$':
+        #        print "hello"
 
 
     def CountPriceRange(self):
@@ -49,15 +54,38 @@ class analyzer(object):
         DB = MySQLdb.connect("localhost", self.username, self.password, "Restaurants")
         self.AreaList = pd.read_sql('SELECT DISTINCT(Restaurants.restaurantTable.area) FROM Restaurants.restaurantTable', con=DB)
         self.Areas = self.AreaList['area'].values.tolist()
-        #TODO:
+
         ## get a count of each price range from each area and put it into a dictionary
         ## iterate through the entire database, if DB.area entry matches the ones in the list, look at the price range
         ## then add the price range to the dictionary? maybe also calculate the average
         ## convert each $ to a number 1-to-4. sum / size of the array = average
-
-
-        print self.Areas
-
+        """
+        ##counts the number of times each area appears
+        SELECT distinct(COUNT(Restaurants.restaurantTable.area)) as p1, Restaurants.restaurantTable.area
+        FROM Restaurants.restaurantTable
+        GROUP by Restaurants.restaurantTable.area
+        """
+        ## create a dictionary that'll store the area name and the average
+        self.AreaAverages = dict()
+        for a in self.Areas:
+            ## for each element in areas list
+            ## find it in the resData by way of 'area'
+            sum = 0
+            counter = 0
+            for index, e in self.resData.iterrows():
+                if a == e['area']:
+                    if e['price'] == '$':
+                        sum += 1
+                    if e['price'] == '$$':
+                        sum += 2
+                    if e['price'] == '$$$':
+                        sum += 3
+                    if e['price'] == '$$$$':
+                        sum += 4
+                    counter += 1
+            avg = (sum/counter)
+            self.AreaAverages.update({a: avg})
+        print self.AreaAverages
     def StitchAreas(self):
         #TODO:
         ## use PIL/OpenCV to colorize each area based on price range avg then stitch those areas together as an overlay
