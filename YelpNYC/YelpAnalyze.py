@@ -42,6 +42,7 @@ class analyzer(object):
             size = self.priceRangeCount['count'].values.tolist()
             fig1, ax1 = plt.subplots(figsize=(16, 8))
             ax1.pie(size, labels=labels, autopct='%1.1f%%',shadow=True, startangle=90)
+            plt.legend(size, loc='upper right')
             ax1.axis('equal')
             plt.savefig('piechart.png')
             plt.show()
@@ -86,6 +87,7 @@ class analyzer(object):
             avg = (sum/counter)
             self.AreaAverages.update({a: avg})
         print self.AreaAverages
+
     def StitchAreas(self):
         #TODO:
         ## use PIL/OpenCV to colorize each area based on price range avg then stitch those areas together as an overlay
@@ -97,5 +99,5 @@ if __name__ == "__main__":
     a = analyzer()
     a.retrieveFromDB()
     a.AreaPriceRange()
-    #a.CountPriceRange()
+    a.CountPriceRange()
 
