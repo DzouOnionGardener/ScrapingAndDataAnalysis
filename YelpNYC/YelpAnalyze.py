@@ -2,6 +2,8 @@ from __future__ import division
 import pandas as pd
 import matplotlib.pyplot as plt
 import MySQLdb
+from colorize import *
+import Image
 
 
 class analyzer(object):
@@ -88,16 +90,20 @@ class analyzer(object):
             self.AreaAverages.update({a: avg})
         print self.AreaAverages
 
-    def StitchAreas(self):
-        #TODO:
-        ## use PIL/OpenCV to colorize each area based on price range avg then stitch those areas together as an overlay
-        ## ontop of the NYC map
-        pass
+    def heat_map(self):
+        for key, avg in self.AreaAverages.iteritems():
+            colorize(key, avg)
+        try:
+            image = Image.open('map/heat_map.png')
+            image.show()
+        except Exception, e:
+            print str(e)
+
 
 
 if __name__ == "__main__":
     a = analyzer()
     a.retrieveFromDB()
     a.AreaPriceRange()
-    a.CountPriceRange()
-
+    ##a.CountPriceRange()
+    a.heat_map()

@@ -1,20 +1,68 @@
 import Image
 import numpy as np
+import csv
+import os
 
-image = Image.open('./neighborhoodsfinancial_District.png')
-image = image.convert('RGBA')
+def colorize(BusinessName, average):
+    try:
+        image = Image.open('map/manhattan.png') if (os.path.isfile('map/NYC.png') == False) else Image.open('map/NYC.png')
+        image = image.convert('RGBA')
+        manhattanBIN = np.array(image) ##turns image into an array of pixel values
+        red, green, blue, alpha = manhattanBIN.T ##get the RGBA of the image
+        print average
+        with open('map/Manhattan.csv', 'rb') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            for row in spamreader:
+                if row[0] == BusinessName:
+                    print row[0] == BusinessName
+                    r = int(row[1])
+                    g = int(row[2])
+                    b = int(row[3])
+                    areaColor = (red == r) & (green == g) & (blue == b) ##select the RGB color from the CSV
+                    ##set color based on average range
+                    if average == 1.00 and average < 1.20:
+                        manhattanBIN[..., :-1][areaColor.T] = (255, 189, 191)
+                    if average == 1.20 and average < 1.40:
+                        manhattanBIN[..., :-1][areaColor.T] = (242, 173, 176)
+                    if average == 1.40 and average < 1.60:
+                        manhattanBIN[..., :-1][areaColor.T] = (229, 157, 161)
+                    if average == 1.60 and average < 1.80:
+                        manhattanBIN[..., :-1][areaColor.T] = (217, 141, 146)
+                    if average == 1.80 and average < 2.00:
+                        manhattanBIN[..., :-1][areaColor.T] = (204, 126, 131)
+                    if average == 2.00 and average < 2.20:
+                        manhattanBIN[..., :-1][areaColor.T] = (192, 110, 116)
+                    if average == 2.20 and average < 2.40:
+                        manhattanBIN[..., :-1][areaColor.T] = (190, 53, 230)
+                    if average == 2.40 and average < 2.60:
+                        manhattanBIN[..., :-1][areaColor.T] = (167, 78, 87)
+                    if average == 2.60 and average < 2.80:
+                        manhattanBIN[..., :-1][areaColor.T] = (154, 63, 72)
+                    if average == 2.80 and average < 3.00:
+                        manhattanBIN[..., :-1][areaColor.T] = (142, 47,57)
+                    if average == 3.00 and average < 3.20:
+                        manhattanBIN[..., :-1][areaColor.T] = (129, 31, 42)
+                    if average == 3.20 and average < 3.40:
+                        manhattanBIN[..., :-1][areaColor.T] = (117, 16, 28)
+                    if average == 3.40 and average < 3.60:
+                        manhattanBIN[..., :-1][areaColor.T] = (86, 7, 17)
+        im = Image.fromarray(manhattanBIN)
+        im.save('map/NYC.png')
+    except:
+        pass
+
+"""
 
 imageBIN = np.array(image)
 red, green, blue, alpha = imageBIN.T
 ##RGBA = (128,128,128)
-grayAreas = (red == 128) & (blue == 128) & (green == 128)
-imageBIN[..., :-1][grayAreas.T] = (255, 0, 0)
+#(0, 64, 64)
+grayAreas = (red == 0) & (blue == 64) & (green == 64)
+imageBIN[..., :-1][grayAreas.T] = (128, 128, 128)
 im2 = Image.fromarray(imageBIN)
-im2.save('cFinancialDistrict.png')
+im2.save('/home/dzou/Desktop/NYC_MAP.png')
 im2.show()
 
-
-"""
                 R     G    B              avg
 starting color:
                 255, 189, 191      1.00 - 1.20
@@ -31,3 +79,5 @@ starting color:
                 117, 016, 028      3.20 - 3.40
                 086, 007, 017      3.40 - 3.60
 """
+
+##store image area coordinates
