@@ -94,7 +94,7 @@ class analyzer(object):
         for key, avg in self.AreaAverages.iteritems():
             colorize(key, avg)
         try:
-            image = Image.open('map/heat_map.png')
+            image = Image.open('map/NYC.png')
             image.show()
         except Exception, e:
             print str(e)
