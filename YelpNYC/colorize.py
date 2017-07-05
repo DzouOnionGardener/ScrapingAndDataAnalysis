@@ -9,7 +9,6 @@ def colorize(BusinessName, average):
         image = image.convert('RGBA')
         manhattanBIN = np.array(image) ##turns image into an array of pixel values
         red, green, blue = manhattanBIN[:,:,0], manhattanBIN[:,:,1],manhattanBIN[:,:,2]
-        print average
         with open('map/Manhattan.csv', 'rb') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
             for row in spamreader:
@@ -19,6 +18,7 @@ def colorize(BusinessName, average):
                     g = int(row[2])
                     b = int(row[3])
                     areaColor = (red == r) & (green == g) & (blue == b) ##select the RGB color from the CSV
+                    print manhattanBIN[:,:,:3]
                     ##set color based on average range
                     if average == 1.00 and average < 1.20:
                         manhattanBIN[:, :, :3][areaColor] = (255, 189, 191)
@@ -47,8 +47,12 @@ def colorize(BusinessName, average):
                     if average == 3.40 and average < 3.60:
                         manhattanBIN[:, :, :3][areaColor] = (86, 7, 17)
             csvfile.close()
+            if csvfile.closed:
+                print "file closed"
         im = Image.fromarray(manhattanBIN)
+        image.close()
         im.save('map/NYC.png')
+        im.close()
     except:
         pass
 
