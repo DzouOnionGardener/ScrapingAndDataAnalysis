@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import time
-import MySQLdb
+import sqlite3 as lite
 import unicodedata
 """
 we're going to parse data from the first 100 pages
@@ -40,8 +40,6 @@ class Yelp(object):
         self.pageIndex = 0
         self.endURL = "&cflt=restaurants"
         self.res = []
-        self.userName = raw_input("mySQL userName: ")
-        self.password = raw_input("mySQL password: ")
         self.userName = str(self.userName)
         self.password = str(self.password)
         with open('results.csv', 'w') as csvfile:
@@ -57,7 +55,7 @@ class Yelp(object):
     def generateCSV(self):
         page = 1
         ## change the page index to increase/decrease the number of pages you want to parse
-        while(self.pageIndex < 300):
+        while(self.pageIndex < 400):
             print "reading page %s" % page
             url = self.baseURL + str(self.pageIndex) + self.endURL
             req = requests.get(url)
@@ -78,18 +76,17 @@ class Yelp(object):
                     pass
             self.pageIndex += 10
             page += 1
-            time.sleep(2)
+            time.sleep(3)
         print "done"
 
     def printRestaurantList(self):
         print self.res
 
 
-    #TODO: get importToDATABASE to work
     def ImportToDataBase(self):
         ##
         ## address, username, password, database_name
-        DB = MySQLdb.connect("localhost", self.userName, self.password, "Restaurants")
+        DB = lite.connect('Restaurant.db')
         #table = restaurantTable
         #columns: name(varchar(255)), rating(decimal), price(varchar(6)), area(varchar(255)), addr(varchar(255))
 
@@ -102,7 +99,7 @@ class Yelp(object):
             for rows in self.resCSV:
                 #print e
                 try:
-                    cursor.execute("INSERT INTO Restaurants.restaurantTable(name, rating, price, area, addr) VALUES(%s, %s, %s, %s, %s )", rows)
+                    cursor.execute("INSERT INTO restaurantTable(name, rating, price, area, addr) VALUES(?, ?, ?, ?, ?)", rows)
                     print "executed!"
                 except:
                     pass
@@ -117,10 +114,10 @@ class Yelp(object):
     def printDB(self):
         ##
         ## address, username, password, database_name
-        DB = MySQLdb.connect("localhost", self.userName, self.password, "Restaurants")
+        DB = lite.connect("Restaurants.db")
         print "connected"
         cursor = DB.cursor()
-        cursor.execute("select * from Restaurants.restaurantTable")
+        cursor.execute("select * from restaurantTable")
         print "printing"
         results = cursor.fetchall()
         print results
@@ -131,5 +128,5 @@ class Yelp(object):
 if __name__ == "__main__":
     y = Yelp()
     y.generateCSV()
-    #y.ImportToDataBase()
+    y.ImportToDataBase()
     #y.printDB()

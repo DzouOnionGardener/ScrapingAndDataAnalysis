@@ -1,20 +1,18 @@
 from __future__ import division
 import pandas as pd
+from pandas.io import sql
 import matplotlib.pyplot as plt
-import MySQLdb
+import sqlite3 as lite
 from colorize import *
 import Image
 
 
 class analyzer(object):
     def __init__(self):
-        self.username = raw_input("mySQL login ID: ")
-        self.password = raw_input("mySQL login password: ")
-
+        self.conn = lite.connect('Restaurant.db')
     def retrieveFromDB(self):
-        DB = MySQLdb.connect("localhost", self.username, self.password, "Restaurants")
         ##retrieve Data from mySQL server then stores into resData
-        self.resData = pd.read_sql('SELECT * FROM Restaurants.restaurantTable', con=DB)
+        self.resData = pd.read_sql('SELECT * FROM restaurantTable', con=self.conn)
         #for index, a in self.resData.iterrows():
         #    if a['price'] == '$$':
         #        print "hello"
@@ -54,8 +52,8 @@ class analyzer(object):
 
     def AreaPriceRange(self):
         ## store DISTINCT(AREA) into a list
-        DB = MySQLdb.connect("localhost", self.username, self.password, "Restaurants")
-        self.AreaList = pd.read_sql('SELECT DISTINCT(Restaurants.restaurantTable.area) FROM Restaurants.restaurantTable', con=DB)
+        cursor = self.conn.cursor()
+        self.AreaList = pd.read_sql('SELECT DISTINCT(restaurantTable.area) FROM restaurantTable', con=self.conn)
         self.Areas = self.AreaList['area'].values.tolist()
 
         ## get a count of each price range from each area and put it into a dictionary
@@ -88,7 +86,16 @@ class analyzer(object):
                     counter += 1
             avg = (sum/counter)
             self.AreaAverages.update({a: avg})
-        print self.AreaAverages
+        averages = pd.DataFrame(self.AreaAverages.items(), columns=['Areas', 'Averages'])
+        try:
+            averages.to_sql(con=self.conn, name='AreaAverage', if_exists='replace', index=False)
+            #ValueError: database flavor mysql is not supported
+            self.conn.commit()
+            print "written to DB"
+        except e:
+            print e
+
+
 
     def heat_map(self):
         for key, avg in self.AreaAverages.iteritems():
@@ -98,6 +105,7 @@ class analyzer(object):
             image.show()
         except Exception, e:
             print str(e)
+            pass
 
 
 
@@ -106,4 +114,4 @@ if __name__ == "__main__":
     a.retrieveFromDB()
     a.AreaPriceRange()
     ##a.CountPriceRange()
-    a.heat_map()
+    ##a.heat_map()
