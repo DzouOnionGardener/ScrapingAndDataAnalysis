@@ -22,9 +22,7 @@ def colorize(BusinessName, average):
                 #acquire RGB
                 r = int(restaurants[RestaurantIndex][1])
                 g = int(restaurants[RestaurantIndex][2])
-                b = int(restaurants[RestaurantIndex][3])
-                print BusinessName, average
-                print r, g, b                                                               #B    G     R
+                b = int(restaurants[RestaurantIndex][3])                                                          
                 if average == 1.00 or average <= 1.20:                                      ##R    G    B
                      ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [191, 189, 255]
                 elif average == 1.20 or average < 1.40:
