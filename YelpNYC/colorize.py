@@ -1,58 +1,58 @@
-import Image
+import cv2
 import numpy as np
 import csv
 import os
 
 def colorize(BusinessName, average):
     try:
-        image = Image.open('map/manhattan.png') if (os.path.isfile('map/NYC.png') == False) else Image.open('map/NYC.png')
-        image = image.convert('RGBA')
-        manhattanBIN = np.array(image) ##turns image into an array of pixel values
-        red, green, blue = manhattanBIN[:,:,0], manhattanBIN[:,:,1],manhattanBIN[:,:,2]
-        with open('map/Manhattan.csv', 'rb') as csvfile:
-            spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-            for row in spamreader:
-                if row[0] == BusinessName:
-                    print row[0], row[1], row[2], row[3]
-                    r = int(row[1])
-                    g = int(row[2])
-                    b = int(row[3])
-                    areaColor = (red == r) & (green == g) & (blue == b) ##select the RGB color from the CSV
-                    print manhattanBIN[:,:,:3]
-                    ##set color based on average range
-                    if average == 1.00 and average < 1.20:
-                        manhattanBIN[:, :, :3][areaColor] = (255, 189, 191)
-                    if average == 1.20 and average < 1.40:
-                        manhattanBIN[:, :, :3][areaColor] = (242, 173, 176)
-                    if average == 1.40 and average < 1.60:
-                        manhattanBIN[:, :, :3][areaColor] = (229, 157, 161)
-                    if average == 1.60 and average < 1.80:
-                        manhattanBIN[:, :, :3][areaColor] = (217, 141, 146)
-                    if average == 1.80 and average < 2.00:
-                        manhattanBIN[:, :, :3][areaColor] = (204, 126, 131)
-                    if average == 2.00 and average < 2.20:
-                        manhattanBIN[:, :, :3][areaColor] = (192, 110, 116)
-                    if average == 2.20 and average < 2.40:
-                        manhattanBIN[:, :, :3][areaColor] = (179, 94, 101)
-                    if average == 2.40 and average < 2.60:
-                        manhattanBIN[:, :, :3][areaColor] = (167, 78, 87)
-                    if average == 2.60 and average < 2.80:
-                        manhattanBIN[:, :, :3][areaColor] = (154, 63, 72)
-                    if average == 2.80 and average < 3.00:
-                        manhattanBIN[:, :, :3][areaColor] = (142, 47,57)
-                    if average == 3.00 and average < 3.20:
-                        manhattanBIN[:, :, :3][areaColor] = (129, 31, 42)
-                    if average == 3.20 and average < 3.40:
-                        manhattanBIN[:, :, :3][areaColor] = (117, 16, 28)
-                    if average == 3.40 and average < 3.60:
-                        manhattanBIN[:, :, :3][areaColor] = (86, 7, 17)
-            csvfile.close()
-            if csvfile.closed:
-                print "file closed"
-        im = Image.fromarray(manhattanBIN)
-        image.close()
-        im.save('map/NYC.png')
-        im.close()
+        image = cv2.imread('map/manhattan.png') if (os.path.isfile('map/NYC.png') ==  False) else cv2.imread('map/NYC.png')
+        ManhattanImage = image
+        csvFile = open('Manhattan.csv', 'rU')
+        reader = csv.reader(csvFile, delimiter=',')
+        restaurants = []
+        rows = 0
+        for row in reader:
+            restaurants.append(row)
+            rows += 1
+        csvFile.close()
+        for row in restaurants:
+            if BusinessName in row:
+                RestaurantIndex = 0
+                RestaurantIndex = restaurants.index(row)
+                #acquire RGB
+                r = int(restaurants[RestaurantIndex][1])
+                g = int(restaurants[RestaurantIndex][2])
+                b = int(restaurants[RestaurantIndex][3])
+                print BusinessName, average
+                print r, g, b                                                               #B    G     R
+                if average == 1.00 or average <= 1.20:                                      ##R    G    B
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [191, 189, 255]
+                elif average == 1.20 or average < 1.40:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [176, 173, 242]
+                elif average == 1.40 or average < 1.60:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [161, 157, 229]
+                elif average == 1.60 or average < 1.80:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [146, 141, 217]
+                elif average == 1.80 or average < 2.00:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [131, 126, 204]
+                elif average == 2.00 or average < 2.20:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [116, 110, 192]
+                elif average == 2.20 or average < 2.40:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [101, 94, 179]
+                elif average == 2.40 or average < 2.60:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [87, 78, 167]
+                elif average == 2.60 or average < 2.80:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [72, 63, 154]
+                elif average == 2.80 or average < 3.00:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [57, 47, 142]
+                elif average == 3.00 or average < 3.20:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [42, 31, 129]
+                elif average == 3.20 or average < 3.40:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [28, 16, 117]
+                elif average == 3.40 or average < 3.60:
+                     ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [17, 7, 86]
+        im = ManhattanImage
+        cv2.imwrite('map/NYC.png', im)
     except:
         pass
 
@@ -86,3 +86,6 @@ starting color:
 """
 
 ##store image area coordinates
+
+if __name__ == "__main__":
+    colorize("boob", 5.5)

@@ -99,7 +99,8 @@ class analyzer(object):
 
     def heat_map(self):
         for key, avg in self.AreaAverages.iteritems():
-            colorize(key, avg)
+            businessname = key.split(',')
+            colorize(businessname[0], avg)
         try:
             image = Image.open('map/NYC.png')
             image.show()
@@ -114,4 +115,4 @@ if __name__ == "__main__":
     a.retrieveFromDB()
     a.AreaPriceRange()
     ##a.CountPriceRange()
-    ##a.heat_map()
+    a.heat_map()
