@@ -22,7 +22,7 @@ def colorize(BusinessName, average):
                 #acquire RGB
                 r = int(restaurants[RestaurantIndex][1])
                 g = int(restaurants[RestaurantIndex][2])
-                b = int(restaurants[RestaurantIndex][3])                                                          
+                b = int(restaurants[RestaurantIndex][3])
                 if average == 1.00 or average <= 1.20:                                      ##R    G    B
                      ManhattanImage[np.where(( ManhattanImage == [b, g, r]).all(axis=2))] = [191, 189, 255]
                 elif average == 1.20 or average < 1.40:
@@ -56,16 +56,6 @@ def colorize(BusinessName, average):
 
 """
 
-imageBIN = np.array(image)
-red, green, blue, alpha = imageBIN.T
-##RGBA = (128,128,128)
-#(0, 64, 64)
-grayAreas = (red == 0) & (blue == 64) & (green == 64)
-imageBIN[..., :-1][grayAreas.T] = (128, 128, 128)
-im2 = Image.fromarray(imageBIN)
-im2.save('/home/dzou/Desktop/NYC_MAP.png')
-im2.show()
-
                 R     G    B              avg
 starting color:
                 255, 189, 191      1.00 - 1.20
@@ -82,8 +72,3 @@ starting color:
                 117, 016, 028      3.20 - 3.40
                 086, 007, 017      3.40 - 3.60
 """
-
-##store image area coordinates
-
-if __name__ == "__main__":
-    colorize("boob", 5.5)
