@@ -5,6 +5,6 @@
 ![piechart](https://github.com/DzouOnionGardener/ScrapingAndDataAnalysis/blob/master/YelpNYC/piechart.png?raw=true)
 
 
-## heat map generation: (persisting bug that needs fixing)
+## heat map generation:
 
 ![heatmap](https://github.com/DzouOnionGardener/ScrapingAndDataAnalysis/blob/master/YelpNYC/map/NYC.png)
